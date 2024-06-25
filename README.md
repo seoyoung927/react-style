@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+# 🔎재사용 가능한 & 일관성 있는 컴포넌트 만들기
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+버튼 컴포넌트를 재사용 가능하게 + 일관성 있게 만들어보자.
 
-## Available Scripts
+## 1. 목표/요구사항
 
-In the project directory, you can run:
+1. **버튼의 shape은 항상 동일해야 한다.**
 
-### `npm start`
+버튼의 전체적인 모양은 변하지 않아야 한다. 즉, 어떤 크기를 갖든, 어떤 색을 갖던지 간에 border-radius, padding 값에 대한 속성들은 고정되어 있어야 한다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **variant props을 통해 preset된 색상을 선택할 수 있어야 한다.**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+일관성 있는 디자인을 구현하기 위해 제한적으로 props를 통해 정의된 스타일을 적용할 수 있도록 만든다.
 
-### `npm test`
+미리 정의된 색을 variant라는 props을 이용하여 선택할 수 있도록 만든다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **size props를 통해 preset된 크기를 선택할 수 있어야 한다.**
 
-### `npm run build`
+색상과 마찬가지로 size 역시 일관성 있는 디자인을 구현하기 위해, 미리 정의된 스타일을 size라는 props을 이용하여 선택할 수 있도록 한다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **버튼 hover, active, disabled에 대한 각각의 스타일이 존재하며, 사용자가 버튼을 클릭했을 때 클릭하는 느낌이 들어야 한다. disabled 되었을 때는 disabled 되었다는 느낌이 들어야 한다.**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+따라서 variant에 맞도록 적절한 색상을 :hover, :active, :diabled 등 다양한 경우에 맞게 배치해야 한다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+재사용성을 높이기 위해서는 해당 컴포넌트가 도메인에 얽히지 않아야 하며, props, attributes의 이름들이 일반적이어야 한다.
 
-### `npm run eject`
+## 2. 코드로 이해
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+React.js + styled-components를 이용해서 만들어보았다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![IMG1](./assets/img1.jpg)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+\*전체 ButtonBase 코드
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```jsx
+import React from "react";
+import styled, { css } from "styled-components";
+import { get500Color, get600Color, get700Color, get300Color } from "../../utils/color";
+import { DEFAULT_FONT_SIZES } from "../../utils/font";
 
-## Learn More
+// 버튼 스타일 정의
+const buttonRoleStyle = css`
+  ${({ variant = "default", disabled }) => css`
+    background-color: ${get500Color(variant)};
+    color: ${get500Color()};
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    &:hover {
+      background-color: ${get600Color(variant)};
+    }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    &:active {
+      background-color: ${get700Color(variant)};
+    }
 
-### Code Splitting
+    &:disabled {
+      background-color: ${get300Color(variant)};
+      pointer-events: none;
+      cursor: ${disabled ? "default" : "pointer"};
+    }
+  `}
+`;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const sizeStyle = css`
+  ${({ size = "md" }) => {
+    if (size === "sm") {
+      return css`
+        padding: 8px 10px;
+        font-size: ${DEFAULT_FONT_SIZES.b2}px;
+      `;
+    }
 
-### Analyzing the Bundle Size
+    if (size === "lg") {
+      return css`
+        padding: 12px 48px;
+        font-size: ${DEFAULT_FONT_SIZES.b2}px;
+      `;
+    }
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    if (size === "xl") {
+      return css`
+        padding: 12px 60px;
+        font-size: ${DEFAULT_FONT_SIZES.b1}px;
+      `;
+    }
 
-### Making a Progressive Web App
+    // 기본적으로 'md'일 때의 스타일 (default)
+    return css`
+      padding: 10px 12px;
+      font-size: ${DEFAULT_FONT_SIZES.b2}px;
+    `;
+  }}
+`;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+const ButtonBase = styled.button`
+  display: inline-flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  vertical-align: center;
+  position: relative;
+  min-width: 64px;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
 
-### Advanced Configuration
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  /* button의 Content를 선택할 수 없도록 한다.*/
+  user-select: none;
 
-### Deployment
+  transition: background-color 0.1s ease;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  /* 배경색 스타일 적용 */
+  ${buttonRoleStyle}
+  /* 사이즈 스타일 적용 */
+    ${sizeStyle}
+`;
 
-### `npm run build` fails to minify
+function Button(props) {
+  return (
+    <div>
+      <ButtonBase variant={props.variant} size={props.size} disabled={props.disabled}>
+        {props.label}
+      </ButtonBase>
+    </div>
+  );
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+export default Button;
+```
+
+⇒다음과 같이 사용
+
+```jsx
+import Button from "./components/common/ButtonBase";
+
+function App() {
+  return (
+    <div>
+      <Button label="기본버튼" variant="primary" size="lg"></Button>
+      <Button label="에러버튼" variant="error"></Button>
+      <Button label="비활성화버튼" variant="warning" disabled="disabled"></Button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 참고
+
+[[React] 재사용 가능한 컴포넌트 만들어 사용하기](https://choyeon-dev.tistory.com/16)
+
+[재사용 가능한 버튼 컴포넌트 만들기 - React](https://velog.io/@mrbartrns/재사용-가능한-버튼-컴포넌트-만들기-React)
