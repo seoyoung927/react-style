@@ -8,17 +8,17 @@
 
 버튼의 전체적인 모양은 변하지 않아야 한다. 즉, 어떤 크기를 갖든, 어떤 색을 갖던지 간에 border-radius, padding 값에 대한 속성들은 고정되어 있어야 한다.
 
-1. **variant props을 통해 preset된 색상을 선택할 수 있어야 한다.**
+2. **variant props을 통해 preset된 색상을 선택할 수 있어야 한다.**
 
 일관성 있는 디자인을 구현하기 위해 제한적으로 props를 통해 정의된 스타일을 적용할 수 있도록 만든다.
 
 미리 정의된 색을 variant라는 props을 이용하여 선택할 수 있도록 만든다.
 
-1. **size props를 통해 preset된 크기를 선택할 수 있어야 한다.**
+3. **size props를 통해 preset된 크기를 선택할 수 있어야 한다.**
 
 색상과 마찬가지로 size 역시 일관성 있는 디자인을 구현하기 위해, 미리 정의된 스타일을 size라는 props을 이용하여 선택할 수 있도록 한다.
 
-1. **버튼 hover, active, disabled에 대한 각각의 스타일이 존재하며, 사용자가 버튼을 클릭했을 때 클릭하는 느낌이 들어야 한다. disabled 되었을 때는 disabled 되었다는 느낌이 들어야 한다.**
+4. **버튼 hover, active, disabled에 대한 각각의 스타일이 존재하며, 사용자가 버튼을 클릭했을 때 클릭하는 느낌이 들어야 한다. disabled 되었을 때는 disabled 되었다는 느낌이 들어야 한다.**
 
 따라서 variant에 맞도록 적절한 색상을 :hover, :active, :diabled 등 다양한 경우에 맞게 배치해야 한다.
 
@@ -293,7 +293,7 @@ Disabled.args = {
   ```
   boolean/text 타입으로 표시
 
-2. **Template 함수**
+**2) Template 함수**
 
 : 실제로 컴포넌트를 렌더링할 때 사용할 템플릿 함수
 
@@ -301,7 +301,7 @@ Disabled.args = {
 const Template = (args) => <Button {...args} />;
 ```
 
-3. **Story 정의**
+**3) Story 정의**
 
 : `Template.bind({})`를 통해 기본 템플릿 함수를 복제하고, 각 스토리별로 초기 상태를 설정한다.
 
