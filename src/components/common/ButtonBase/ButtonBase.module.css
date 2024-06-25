@@ -1,0 +1,56 @@
+/* Button.module.css */
+.buttonBase {
+  display: inline-flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  vertical-align: center;
+  position: relative;
+  min-width: 64px;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none; /* button의 Content를 선택할 수 없도록 한다.*/
+  transition: background-color 0.1s ease;
+  background-color: var(--color-background-500);
+  color: var(--color-font-500);
+}
+
+.buttonBase:hover {
+  background-color: var(--color-background-600);
+}
+
+.buttonBase:active {
+  background-color: var(--color-background-700);
+}
+
+.buttonBase:disabled {
+  background-color: var(--color-background-300);
+  pointer-events: none;
+  cursor: var(--button-cursor);
+}
+
+.sm {
+  padding: 8px 10px;
+  font-size: var(--normal);
+}
+
+.lg {
+  padding: 12px 48px;
+  font-size: var(--normal);
+}
+
+.xl {
+  padding: 12px 60px;
+  font-size: var(--large);
+}
+
+.md {
+  padding: 10px 12px;
+  font-size: var(--normal);
+}
